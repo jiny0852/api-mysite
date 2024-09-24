@@ -50,8 +50,8 @@ public class UserController {
 	
 	
 	/* login */
-	@GetMapping ( value="/api/users" )
-	public JsonResult login( @RequestBody UserVo userVo ) {
+	@PostMapping ( value="/api/loginusers" )
+	public JsonResult loginform ( @RequestBody UserVo userVo ) {
 		
 		System.out.println("userController.login()");
 		
@@ -59,7 +59,7 @@ public class UserController {
 		
 		UserVo authUser = userService.exeLogin(userVo);
 		
-		System.out.println(authUser);
+		System.out.println("authUser: " + authUser);
 		
 		if ( authUser != null ) { 
 			return JsonResult.fail("회원가입이 불가합니다");
