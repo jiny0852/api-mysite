@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="board">
+
+<!-- 쿼리문작성 -->
+
+	<!-- boardList 전체 가져오기 -->
+	<select id="selectList" resultType="com.javaex.vo.BoardVo">
+
+		<![CDATA[
+
+			select 	b.no no, 
+		    	    b.title title, 
+		            b.content content,
+		            b.hit hit,
+		            b.reg_date regDate,
+		            b.user_no userNo,
+		            u.name userName
+		    from board b, users u
+		    where b.user_no  = u.no
+
+		]]>
+
+	</select>
+	
+	
+	<!-- board Read 한페이지 가져오기 -->
+	<select id="selectRead" parameterType="int" resultType="com.javaex.vo.BoardVo">
+
+
+		<![CDATA[
+		
+		
+			
+			select 	b.no no, 
+		    	    b.title title, 
+		            b.content content,
+		            b.hit hit,
+		            b.reg_date regDate,
+		            b.user_no userNo,
+		            u.name userName
+		    from board b, users u
+		    where b.user_no  = u.no
+		    and b.no  = #{no}
+			
+		]]>
+		
+	</select>
+
+
+	<!-- 저장 프로시저 호출 -->
+	<update id="increaseHitCount" parameterType="int">
+    
+    	<![CDATA[
+    	
+       		CALL IncreaseHitCount(#{no});
+       
+        ]]>
+	</update>
+	
+	
+	<!-- board Read 한페이지 가져오기 -->
+	<insert id="insert" parameterType="com.javaex.vo.BoardVo">
+	
+		<![CDATA[
+
+			insert into board 
+			values ( null, #{title}, #{content}, 1, now(), #{userNo} )
+
+		]]>
+
+	</insert>
+	
+	
+	<!-- 페이지 수정하기 -->
+	<update id="update" parameterType="com.javaex.vo.UserVo">
+	
+		<![CDATA[
+
+			update board 
+			set title = #{title}, 
+				content = #{content}
+	 		where no = #{no}
+
+		]]>
+
+	</update>
+
+
+
+
+
+
+
+
+
+
+
+
+
+</mapper>
