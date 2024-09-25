@@ -14,8 +14,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.javaex.service.UserService;
 import com.javaex.util.JsonResult;
+import com.javaex.util.JwtUtil;
 import com.javaex.vo.UserVo;
 
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 
 @RestController
@@ -50,9 +52,10 @@ public class UserController {
 	
 	
 	/* login */
-	@PostMapping ( value="/api/loginusers" )
-	public JsonResult loginform ( @RequestBody UserVo userVo ) {
-		
+	@PostMapping ( value="/api/users/login" )
+	public JsonResult loginform ( @RequestBody UserVo userVo, 
+									HttpServletResponse response ) {
+		 
 		System.out.println("userController.login()");
 		
 		System.out.println(userVo);
@@ -62,11 +65,24 @@ public class UserController {
 		System.out.println("authUser: " + authUser);
 		
 		if ( authUser != null ) { 
-			return JsonResult.fail("회원가입이 불가합니다");
+			
+			//토큰을 만들고 "응답문서의 헤더"에 토큰을 붙여서 보낸다
+			JwtUtil.createTokenAndSetHeader(response, ""+authUser.getNo());
+			
+			return JsonResult.success(authUser);
 			
 		} else {  
-			return JsonResult.success(authUser);
+			
+			return JsonResult.fail("회원가입이 불가합니다");
 		}
+		
+		
+		
+		
+		
+		
+		
+
 		
 	}
 	
