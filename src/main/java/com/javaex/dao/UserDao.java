@@ -1,5 +1,7 @@
 package com.javaex.dao;
 
+import java.util.Map;
+
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -44,11 +46,11 @@ public class UserDao {
 	}
 	
 	
-	public UserVo getUserOne ( UserVo userVo ) {
+	public UserVo getUserOne ( int no ) {
 		
 		System.out.println("UserDao.getUserOne()");
 		
-		UserVo authUser = sqlSession.selectOne("user.selectByNoName", userVo);
+		UserVo authUser = sqlSession.selectOne("user.selectByNoName", no);
 		
 		System.out.println("getUserOne.User : " + authUser);
 		

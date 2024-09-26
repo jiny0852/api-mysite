@@ -1,5 +1,7 @@
 package com.javaex.service;
 
+import java.util.Map;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -39,11 +41,11 @@ public class UserService {
 		
 	}
 	
-	public UserVo exeGetUserOne ( UserVo userVo ) {
+	public UserVo exeGetUserOne ( int no ) {
 		
-		System.out.println("UserService.exeGetUserOne()");
+		System.out.println("UserService.selectUserById()");
 		
-		UserVo authUser = userDao.getUserOne(userVo);
+		UserVo authUser = userDao.getUserOne(no);
 		
 		
 		return authUser;

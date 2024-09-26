@@ -1,10 +1,14 @@
 package com.javaex.controller;
 
+import java.util.Map;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -17,6 +21,7 @@ import com.javaex.util.JsonResult;
 import com.javaex.util.JwtUtil;
 import com.javaex.vo.UserVo;
 
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 
@@ -78,13 +83,72 @@ public class UserController {
 		
 		
 		
+	}
+	
+	
+	/* modifyForm - getOne */
+	@GetMapping ( value="/api/users/me" )
+	public JsonResult getPerson( HttpServletRequest request ) {
+		
+		System.out.println("userController.getPerson()");
+		
+		//요청헤더에서 토큰을 꺼내서 유효성을 체크한 후 정상이면 no값을 꺼내준다
+		int no = JwtUtil.getNoFromHeader(request);
+		System.out.println(no);
+		
+		if ( no != -1 ) { //토큰 정상
+			UserVo userVo = userService.exeGetUserOne(no);
+			return JsonResult.success(userVo);
+			
+		} else { //토큰 비정상
+			return JsonResult.fail("토큰x, 비로그인, 변조");
+		}
 		
 		
-		
-		
-
 		
 	}
+	
+	/* modifyForm - update */
+	@PutMapping ( value="/api/users/me")
+	public JsonResult updateUser ( @RequestBody UserVo userVo ,
+									HttpServletRequest request) {
+		
+		System.out.println("userController.updateUser()");
+		
+		int no = JwtUtil.getNoFromHeader(request);
+		
+		if ( no != -1 ) { //토큰이 정상일때
+			
+			userVo.setNo(no);
+			System.out.println(userVo);
+			
+			UserVo updateVo = userService.exeUpdateUser(userVo);
+			
+			updateVo.setId(null);
+			updateVo.setPassword(null);
+			updateVo.setGender(null);
+			
+			if ( updateVo == null ) {
+				return JsonResult.fail("업뎃 실패");
+				
+			} else { //업뎃성공
+				return JsonResult.success(updateVo);
+			}
+			
+			
+		} else { //토큰이 비정상일때
+			return JsonResult.fail("토큰x, 비로그인, 변조");
+		}
+		
+		
+	}
+	
+	
+	
+	
+	
+	
+	
 	
 	
 	
@@ -136,23 +200,7 @@ public class UserController {
 	}
 	
 	
-	/* modifyForm */
-	@RequestMapping ( value="/user/modifyform", method= {RequestMethod.GET, RequestMethod.POST} )
-	public String modifyform ( Model model, HttpSession session ) {
-		
-		System.out.println("userController.modifyform()");
-		
-		System.out.println((UserVo)session.getAttribute("authUser")); 
-		
-		UserVo userVo = userService.exeGetUserOne( (UserVo)session.getAttribute("authUser") );
-		
-		System.out.println(userVo);
-		
-		model.addAttribute(userVo);
-		
-		
-		return "/user/modifyForm";
-	}
+
 
 
 	/* modify */

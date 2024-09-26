@@ -48,7 +48,6 @@
 				    gender 
 			from users
 			where no = #{no}
-			and name = #{name}
 
 		]]>
 
