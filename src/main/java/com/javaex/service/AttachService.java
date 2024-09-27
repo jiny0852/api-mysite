@@ -1,111 +1,163 @@
+
 package com.javaex.service;
 
 import java.io.BufferedOutputStream;
+import java.io.File;
 import java.io.FileOutputStream;
-import java.io.IOException;
 import java.io.OutputStream;
 import java.util.UUID;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.javaex.dao.AttachDao;
 import com.javaex.vo.AttachVo;
+import com.javaex.vo.AttachVo2;
 
 @Service
 public class AttachService {
 	
-	@Autowired
-	private AttachDao attachDao;
 	
-	
-	
-	public String upload ( MultipartFile file ) {
+	public String exeUpload2(AttachVo2 attachVo2) {
+		System.out.println("AttachService.upload2");
 		
-		System.out.println("AttachService.upload()");
-		//System.out.println(file.getOriginalFilename());
-		
-		////사진에 있는 기본 정보로 우리가 관리할 정보를 뽑아내야된다 -->db저장
+		//사진에 기본정보로 우리가 관리할 정보를 뽑아내야된다 -->db저장
 		//파일 저장 폴더
-		String saveDir = "C:\\javaStudy\\upload";
+		String saveDir; // = "C:\\javaStudy\\upload";
 		
 		
-		//오리지널 파일명
+		//파일저장경로 변수
+		
+		//현재 OS
+		String osName = System.getProperty("os.name").toLowerCase();
+		System.out.println("--------------------");
+		System.out.println(osName);
+		System.out.println("--------------------");
+		
+		if ( osName.contains("linux") ) {
+			System.out.println("리눅스");
+			saveDir = "/app/upload";
+			
+		} else {
+			System.out.println("윈도우");
+			saveDir = "C:\\javaStudy\\upload";
+		}
+		
+		
+		
+		MultipartFile file = attachVo2.getImg();
+		
+		
+		
+		
+		//오리지날 파일명
 		String orgName = file.getOriginalFilename();
-		System.out.println("orgName : " + orgName);
-		
+		System.out.println("orgName: " + orgName );
 		
 		//확장자
-		String exeName;
-		/*
-		orgName.lastIndexOf("."); //.이 파일명의 몇벙쨰에 있는지 알려줘
-		System.out.println("orgName.lastIndexOf(.) : " + orgName.lastIndexOf("."));
-		orgName.substring(11); //11번쨰 뒷문자열 출력해줘
-		System.out.println("orgName.lastIndexOf(.) : " + orgName.substring(11));
-		*/
-		exeName = orgName.substring(orgName.lastIndexOf("."));
-		System.out.println("확장자 : " + exeName);
+		String exeName = orgName.substring(orgName.lastIndexOf("."));
+		System.out.println("exeName: " + exeName);
 		
-		
-		//파일 사이즈
+		//파일사이즈
 		long fileSize = file.getSize();
-		System.out.println("파일 사이즈 : " + fileSize);
+		System.out.println("FileSize: " + fileSize);
 		
-		//저장 파일명(겹치지 않아야한다)             내가 관리할
-		String saveName = System.currentTimeMillis() 
-						//+ "####" //얘는 뺴도 되지 않을까
-						+ UUID.randomUUID().toString() 
-						+ exeName;
-		System.out.println("savaName : " + saveName);
+		//저장파일명(겹치지 않아야 한다)
+		String savaName = System.currentTimeMillis() + UUID.randomUUID().toString()+exeName;
+		System.out.println("savaName: " + savaName);
 		
-		
-		//파일 전체경로 + 파일명
-		String filePath = saveDir + "\\" + saveName;
-		System.out.println("filePath : " + filePath);
-		
+		//파일 전체 경로+파일명
+		String filePath = saveDir + File.separator + savaName; //File.separator == "//" or "/"
+		System.out.println("filePath: " + filePath);
 		
 		//(1)db저장
-		//(1-1) 데이터 묶기
-		//orgName saveName filePath fileSize
-		AttachVo attachVo = new AttachVo(orgName, saveName, filePath, fileSize);
-		System.out.println(attachVo);
-		  
+		//(1-1) 데이타 묶기
+		attachVo2.setOrgName(orgName);
+		attachVo2.setSavaName(savaName);
+		attachVo2.setFilePath(filePath);
+		attachVo2.setFileSize(fileSize);
 		
-		//(1-2) dao를 통해 db에 저장
-		//attachDao.insertFile(attachVo);
 		
-		////사진을 서버(강남)에 복사해야한다 == 하드디스크에 복사해야된다
-		//파일 저장
+		
+		//AttachVo attachVo= new AttachVo(orgName, savaName, filePath, fileSize);
+		System.out.println(attachVo2);
+		
+        //(1-2) dao를 통해서 db에저장
+		//과제.....
+		System.out.println("과제:" + "db저장중.......");
+		
+		
+		//(2)사진을 서버(강남)에 하드디스크에 복사해야된다
+		//파일저장
 		try {
-			
 			byte[] fileData = file.getBytes();
 			OutputStream os = new FileOutputStream(filePath);
 			BufferedOutputStream bos = new BufferedOutputStream(os);
 			
 			bos.write(fileData);
-			
 			bos.close();
 			
-			
-			
-		} catch (IOException e) {
+		} catch (Exception e) {
 			System.out.println(e.toString());
 		}
 		
-		
-		
-		
-		return saveName;
-		
-		
+		return savaName;  //시간+uuid+.jpg
 	}
 	
 	
 	
-	
-	
-	
-	
+	public String exeUpload(MultipartFile file) {
+		System.out.println("AttachService.upload");
+		
+		//사진에 기본정보로 우리가 관리할 정보를 뽑아내야된다 -->db저장
+		//파일 저장 폴더
+		String saveDir = "C:\\javaStudy\\upload";
+		
+		
+		//오리지날 파일명
+		String orgName = file.getOriginalFilename();
+		System.out.println("orgName: " + orgName );
+		
+		//확장자
+		String exeName = orgName.substring(orgName.lastIndexOf("."));
+		System.out.println("exeName: " + exeName);
+		
+		//파일사이즈
+		long fileSize = file.getSize();
+		System.out.println("FileSize: " + fileSize);
+		
+		//저장파일명(겹치지 않아야 한다)
+		String savaName = System.currentTimeMillis() + UUID.randomUUID().toString()+exeName;
+		System.out.println("savaName: " + savaName);
+		
+		//파일 전체 경로+파일명
+		String filePath = saveDir + "\\" + savaName;
+		System.out.println("filePath: " + filePath);
+		
+		//(1)db저장
+		//(1-1) 데이타 묶기
+		AttachVo attachVo= new AttachVo(orgName, savaName, filePath, fileSize);
+		System.out.println(attachVo);
+		
+        //(1-2) dao를 통해서 db에저장
+		//과제.....
+		System.out.println("과제:" + "db저장중.......");
+		
+		
+		//(2)사진을 서버(강남)에 하드디스크에 복사해야된다
+		//파일저장
+		try {
+			byte[] fileData = file.getBytes();
+			OutputStream os = new FileOutputStream(filePath);
+			BufferedOutputStream bos = new BufferedOutputStream(os);
+			
+			bos.write(fileData);
+			bos.close();
+			
+		} catch (Exception e) {
+			System.out.println(e.toString());
+		}
+		
+		return savaName;  //시간+uuid+.jpg
+	}
 
 }

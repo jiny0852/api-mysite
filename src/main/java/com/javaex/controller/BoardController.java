@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.javaex.service.BoardService;
@@ -31,6 +32,26 @@ public class BoardController {
 			
 		} else { 
 			return JsonResult.success(boardList);
+		}
+				                                    
+	}
+	
+	
+	/* board read */
+	@GetMapping ( "/api/boards/{no}" )
+	public JsonResult getBoard ( @PathVariable(value="no") int no ) {
+		
+		System.out.println("boardController.getBoard()");
+		
+		BoardVo boardVo = boardService.exeGetReadOne(no);
+		
+		System.out.println(boardVo);
+		
+		if ( boardVo == null ) { 
+			return JsonResult.fail("보드read 오류");
+			
+		} else { 
+			return JsonResult.success(boardVo);
 		}
 				                                    
 	}

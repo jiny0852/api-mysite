@@ -56,6 +56,10 @@
 		
 		
 		
+		
+		
+		
+		
 		<!--java-jwt-->
 		<dependency>
 			<groupId>com.auth0</groupId>
@@ -63,11 +67,30 @@
 			<version>4.4.0</version>
 		</dependency>
 		<!--//java-jwt-->
-		
-		
-	
 
+
+		<!-- File Upload -->
+		<dependency>
+			<groupId>commons-fileupload</groupId>
+			<artifactId>commons-fileupload</artifactId>
+			<version>1.4</version>
+		</dependency>
+
+		<dependency>
+			<groupId>commons-io</groupId>
+			<artifactId>commons-io</artifactId>
+			<version>2.11.0</version>
+		</dependency>
+		<!-- /File Upload -->
 		
+		
+		
+		
+		
+		
+		
+
+
 		<!-- devtools -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
@@ -76,8 +99,8 @@
 			<optional>true</optional>
 		</dependency>
 		<!-- /devtools -->
-		
-		
+
+
 		<!-- mySQL JDBC -->
 		<dependency>
 			<groupId>com.mysql</groupId>
@@ -85,8 +108,8 @@
 			<scope>runtime</scope>
 		</dependency>
 		<!-- //mySQL JDBC -->
-		
-		
+
+
 		<!-- myBatis JDBC -->
 		<dependency>
 			<groupId>org.mybatis.spring.boot</groupId>
