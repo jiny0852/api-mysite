@@ -47,11 +47,11 @@ public class AttachController {
 		
 		//System.out.println(content);
 		
-		attachService.exeUpload2(attach);
+		String savename = attachService.exeUpload2(attach);
 		
 		
 		
-		return JsonResult.success("");
+		return JsonResult.success(savename);
 		
 				                                    
 	}
