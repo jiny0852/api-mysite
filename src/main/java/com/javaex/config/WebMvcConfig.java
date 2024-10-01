@@ -29,7 +29,7 @@ public class WebMvcConfig implements WebMvcConfigurer {
 		
 		if ( osName.contains("linux") ) {
 			System.out.println("리눅스");
-			saveDir = "/home/ec2-user/upload/"; //"/app/upload/";
+			saveDir = "/app/upload/"; //"/home/ec2-user/upload/";
 			
 		} else {
 			System.out.println("윈도우");
