@@ -29,7 +29,7 @@ public class AttachController {
 		System.out.println(profileImg.getOriginalFilename());
 		
 		String saveName = attachService.exeUpload(profileImg);
-		
+		asd
 		
 		
 		return JsonResult.success(saveName);
