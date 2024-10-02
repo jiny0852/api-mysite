@@ -45,7 +45,7 @@ jobs: # 작업을 정의
         uses: appleboy/ssh-action@master # 깃허브에서 제공하는 ssh-action@master 기능 
         with:
           host: ${{ secrets.EC2_HOST }}					 #ec2서버의 ip (깃허브에 세팅된값)
-          username: ${{ secrets.EC2_USERNAME }}			 #ec2서버의 계정명 (깃허브에 세팅된값)
+          username: ${{ secrets.EC2_USERNAME }}			 #ec2서버의 계정명 (깃허브에 세팅된값)   
           key: ${{ secrets.SSH_PRIVATE_KEY }}			 #web.pem 비번 (깃허브에 세팅된값)
           script: |
             sudo mkdir -p /home/ec2-user/upload
